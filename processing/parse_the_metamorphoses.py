@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 import requests
 import unicodedata
 import re
@@ -6,10 +5,17 @@ import os
 import json
 import itertools
 
+import spacy
+from bs4 import BeautifulSoup
+
+from spacy.language import Language
 
 base_url = 'https://ovid.lib.virginia.edu/trans'
 init_page = 'Metamorph.htm'
 output_file = 'data/metamorphoses.json'
+
+# init spacy
+nlp = spacy.load('en_core_web_sm', disable=['ner', 'textcat'])
 
 
 def normalize_text(text):
@@ -33,7 +39,7 @@ def make_soup(url):
         print(err)    
 
     html = response.content
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, features='html.parser')
 
     return soup
 
@@ -56,7 +62,7 @@ def book_generator(counter, soup):
         if start is None:
             running = False
 
-        elif start.next_element.name == 'center' :
+        elif start.next_element.name == 'center' or start is None:
             running = False
 
         elif start.name == 'h4':
@@ -66,15 +72,16 @@ def book_generator(counter, soup):
             start = start.next_sibling        
 
         elif start.name == 'p':
-            text = normalize_text(start.text)
-            
             if start != elem[0]:
-                book.append({
-                    'book': counter,
-                    'chapter': chapter,
-                    'text': text
-                })
-                start = start.next_sibling
+                text = normalize_text(start.text)
+                sents = list(nlp(text).sents)
+                for sent in sents:
+                    book.append({
+                        'book': counter,
+                        'chapter': chapter,
+                        'text': str(sent)
+                    })
+            start = start.next_sibling
 
         else:
             start = start.next_sibling
