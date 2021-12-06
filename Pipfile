@@ -7,6 +7,9 @@ name = "pypi"
 elasticsearch = "*"
 spacy = "*"
 bs4 = "*"
+flask = "*"
+elasticsearch-dsl = "*"
+lxml = "*"
 
 [dev-packages]
 
