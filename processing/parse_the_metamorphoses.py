@@ -4,6 +4,7 @@ import re
 import os 
 import json
 import itertools
+import lxml
 
 import spacy
 from bs4 import BeautifulSoup
@@ -39,7 +40,7 @@ def make_soup(url):
         print(err)    
 
     html = response.content
-    soup = BeautifulSoup(html, features='html.parser')
+    soup = BeautifulSoup(html, features='lxml')
 
     return soup
 
@@ -54,7 +55,6 @@ def get_all_books(soup):
 def book_generator(counter, soup):
     elem = soup.find_all('h4')
     start = elem[0]
-
     book = []
 
     running = True
@@ -66,12 +66,12 @@ def book_generator(counter, soup):
             running = False
 
         elif start.name == 'h4':
-            chapter = normalize_text(start.text)
+            chapter = normalize_text(start.get_text())
             chapter = re.sub("Bk.*(\d+)(?!.*\d)", '', chapter).strip()
 
-            start = start.next_sibling        
+            start = start.find_next()      
 
-        elif start.name == 'p':
+        elif start.name == 'p' and len(start.text) > 0:
             if start != elem[0]:
                 text = normalize_text(start.text)
                 sents = list(nlp(text).sents)
@@ -81,12 +81,19 @@ def book_generator(counter, soup):
                         'chapter': chapter,
                         'text': str(sent)
                     })
-            start = start.next_sibling
+            start = start.find_next()
 
         else:
-            start = start.next_sibling
+            start = start.find_next()
 
     return book
+
+def write_jsonl(data, output_path, append):
+    mode = 'a+' if append else 'w'
+    with open(output_path, mode, encoding='utf-8') as f:
+        for line in data:
+            json_record = json.dumps(line, ensure_ascii=False)
+            f.write(json_record + '\n')
 
 
 if __name__ == '__main__':
@@ -95,17 +102,15 @@ if __name__ == '__main__':
 
     links = get_all_books(init_soup)
 
-    books = []
     counter = 1
+
     for link in links:
+        append = True if counter > 1 else False
+        
         url = make_url(base_url, link)
         soup = make_soup(url)
 
         book = book_generator(counter, soup)
-        books.append(book)
+        write_jsonl(book, output_file, append)
+
         counter += 1
-
-    books = list(itertools.chain(*books))
-
-    with open(output_file,'w+', encoding='utf-8') as f:
-        json.dump(books, f, ensure_ascii=False)
