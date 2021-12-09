@@ -10,6 +10,7 @@ bs4 = "*"
 flask = "*"
 elasticsearch-dsl = "*"
 lxml = "*"
+fastapi = {extras = ["all"], version = "*"}
 
 [dev-packages]
 
