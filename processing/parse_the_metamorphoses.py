@@ -3,8 +3,6 @@ import unicodedata
 import re
 import os 
 import json
-import itertools
-import lxml
 
 import spacy
 from bs4 import BeautifulSoup
@@ -52,7 +50,7 @@ def get_all_books(soup):
     return links 
 
 
-def book_generator(counter, soup):
+def book_generator(book_counter, chapter_counter, line_counter, soup):
     elem = soup.find_all('h4')
     start = elem[0]
     book = []
@@ -68,7 +66,7 @@ def book_generator(counter, soup):
         elif start.name == 'h4':
             chapter = normalize_text(start.get_text())
             chapter = re.sub("Bk.*(\d+)(?!.*\d)", '', chapter).strip()
-
+            chapter_counter += 1
             start = start.find_next()      
 
         elif start.name == 'p' and len(start.text) > 0:
@@ -77,16 +75,20 @@ def book_generator(counter, soup):
                 sents = list(nlp(text).sents)
                 for sent in sents:
                     book.append({
-                        'book': counter,
-                        'chapter': chapter,
+                        'line': line_counter,
+                        'book': book_counter,
+                        'chapter': chapter_counter,
+                        'chapter_name': chapter,
                         'text': str(sent)
                     })
+                    line_counter += 1
             start = start.find_next()
 
         else:
             start = start.find_next()
 
     return book
+
 
 def write_jsonl(data, output_path, append):
     mode = 'a+' if append else 'w'
@@ -102,15 +104,18 @@ if __name__ == '__main__':
 
     links = get_all_books(init_soup)
 
-    counter = 1
+    book_counter = 1
+    chapter_counter = 0
+    line_counter = 0
 
     for link in links:
-        append = True if counter > 1 else False
+        append = True if book_counter > 1 else False
         
         url = make_url(base_url, link)
         soup = make_soup(url)
 
-        book = book_generator(counter, soup)
+        book = book_generator(book_counter, chapter_counter, line_counter, soup)
         write_jsonl(book, output_file, append)
 
-        counter += 1
+        book_counter += 1
+        line_counter += len(book)
