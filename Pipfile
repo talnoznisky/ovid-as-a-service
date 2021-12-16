@@ -11,6 +11,7 @@ flask = "*"
 elasticsearch-dsl = "*"
 lxml = "*"
 fastapi = {extras = ["all"], version = "*"}
+slowapi = "*"
 
 [dev-packages]
 
