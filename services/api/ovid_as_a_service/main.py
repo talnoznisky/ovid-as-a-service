@@ -8,7 +8,7 @@ class OvidAsAService():
 
     # INT FUNCTIONS
     def _init_es(self):
-        _es = connections.create_connection(alias='default', hosts=['0.0.0.0:9200'])
+        _es = connections.create_connection(alias='default', hosts=['elasticsearch:9200'])
         if _es.ping():
             logging.info('connected to es!')
         else:
