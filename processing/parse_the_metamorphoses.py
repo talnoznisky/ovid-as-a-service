@@ -11,7 +11,7 @@ from spacy.language import Language
 
 base_url = 'https://ovid.lib.virginia.edu/trans'
 init_page = 'Metamorph.htm'
-output_file = 'data/metamorphoses.json'
+output_file = 'processing/data/metamorphoses.json'
 
 # init spacy
 nlp = spacy.load('en_core_web_sm', disable=['ner', 'textcat'])

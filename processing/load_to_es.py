@@ -2,14 +2,11 @@ from elasticsearch import Elasticsearch
 import logging
 import json
 
-file = 'data/metamorphoses.json'
-
-with open(file, 'r') as f:
-    data = json.load(f)
+file = 'processing/data/metamorphoses.json'
 
 def connect_elasticsearch():
     _es = None
-    _es = Elasticsearch([{'host':'localhost','port': 9200}])
+    _es = Elasticsearch([{'host':'0.0.0.0','port': 9200}])
     if _es.ping():
         print('connected!')
     else:
@@ -27,7 +24,7 @@ def create_index(es_object, index_name='metamorphoses'):
             "number_of_replicas": 0
         },
         "mappings": {
-            "properties": {
+            "metamorphoses": {
                 "book": {"type": "integer"},
                 "chapter": {"type": "text"},
                 "text": {"type": "text"}
@@ -56,5 +53,7 @@ def store_record(elastic_object, index_name, record):
 es = connect_elasticsearch()
 create_index(es)
 
-for line in data:
-    store_record(es, "metamorphoses", line)
+with open(file, 'r') as f:
+    for line in f:
+        line = json.loads(line.rstrip('\n|\r'))
+        store_record(es, "metamorphoses", line)
