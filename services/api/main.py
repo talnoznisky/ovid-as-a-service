@@ -5,11 +5,11 @@ app = FastAPI()
 ovid = OvidAsAService()
 
 
-@app.post("/v1/lines")
+@app.get("/v1/lines")
 def get_lines(query: str):
     return ovid.query_text(query)
 
 
-@app.post("/v1/books")
+@app.get("/v1/books")
 def get_book(query: int):
     return ovid.query_book(query)
