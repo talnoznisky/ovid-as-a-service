@@ -4,14 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-elasticsearch = "*"
 spacy = "*"
 bs4 = "*"
-flask = "*"
-elasticsearch-dsl = "*"
 lxml = "*"
 fastapi = {extras = ["all"], version = "*"}
 slowapi = "*"
+whoosh = "*"
 
 [dev-packages]
 

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f65b3a6cad4737b541839e726c9e7d90295f325818e7e860a57aed28fa828c3f"
+            "sha256": "38f1b6adbf5faff438a92d9fd6bd4804993fc7c897d7c8689b36453f11a300f4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -128,22 +128,6 @@
             "markers": "python_version >= '3.6'",
             "version": "==2.1.0"
         },
-        "elasticsearch": {
-            "hashes": [
-                "sha256:97e9d62db71a571c540d6dfa2a51bc2263b5c0d7b9f9896eb7116ba02373c69b",
-                "sha256:c024ee2e7e2509c842c4e3c5e2b99a92ceecfde06d6dac2d32a19bf566c3e175"
-            ],
-            "index": "pypi",
-            "version": "==7.16.1"
-        },
-        "elasticsearch-dsl": {
-            "hashes": [
-                "sha256:046ea10820b94c075081b528b4526c5bc776bda4226d702f269a5f203232064b",
-                "sha256:c4a7b93882918a413b63bed54018a1685d7410ffd8facbc860ee7fd57f214a6d"
-            ],
-            "index": "pypi",
-            "version": "==7.4.0"
-        },
         "email-validator": {
             "hashes": [
                 "sha256:5675c8ceb7106a37e40e2698a57c056756bf3f272cfa8682a4f87ebd95d8440b",
@@ -161,14 +145,6 @@
             ],
             "index": "pypi",
             "version": "==0.70.1"
-        },
-        "flask": {
-            "hashes": [
-                "sha256:7b2fb8e934ddd50731893bdcdb00fc8c0315916f9fcd50d22c7cc1a95ab634e2",
-                "sha256:cb90f62f1d8e4dc4621f52106613488b5ba826b2e1e10a33eac92f723093ab6a"
-            ],
-            "index": "pypi",
-            "version": "==2.0.2"
         },
         "h11": {
             "hashes": [
@@ -537,14 +513,6 @@
             "markers": "python_version >= '3.6'",
             "version": "==3.0.6"
         },
-        "python-dateutil": {
-            "hashes": [
-                "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86",
-                "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"
-            ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-            "version": "==2.8.2"
-        },
         "python-dotenv": {
             "hashes": [
                 "sha256:32b2bdc1873fd3a3c346da1c6db83d0053c3c62f28f1f38516070c4c8971b1d3",
@@ -637,7 +605,7 @@
                 "sha256:71d14489da58b60ce12fc3ecb823facc59a8b23cd1b58edb97175640350d3a62",
                 "sha256:75abf758717a92a8f53aa96953f0c245c8cedf8e1e4184903db3659b419d4c17"
             ],
-            "markers": "python_version >= '3.6' and python_version < '4.0'",
+            "markers": "python_version >= '3.6' and python_version < '4'",
             "version": "==5.2.1"
         },
         "sniffio": {
@@ -824,7 +792,7 @@
                 "sha256:4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece",
                 "sha256:c4fdf4019605b6e5423637e01bc9fe4daef873709a7973e195ceba0a62bbc844"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4.0'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'",
             "version": "==1.26.7"
         },
         "uvicorn": {
@@ -925,13 +893,14 @@
             ],
             "version": "==10.1"
         },
-        "werkzeug": {
+        "whoosh": {
             "hashes": [
-                "sha256:63d3dc1cf60e7b7e35e97fa9861f7397283b75d765afcaefd993d6046899de8f",
-                "sha256:aa2bb6fc8dee8d6c504c0ac1e7f5f7dc5810a9903e793b6f715a9f015bdadb9a"
+                "sha256:7ca5633dbfa9e0e0fa400d3151a8a0c4bec53bd2ecedc0a67705b17565c31a83",
+                "sha256:aa39c3c3426e3fd107dcb4bde64ca1e276a65a889d9085a6e4b54ba82420a852",
+                "sha256:e0857375f63e9041e03fedd5b7541f97cf78917ac1b6b06c1fcc9b45375dda69"
             ],
-            "markers": "python_version >= '3.6'",
-            "version": "==2.0.2"
+            "index": "pypi",
+            "version": "==2.7.4"
         }
     },
     "develop": {}
