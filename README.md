@@ -14,7 +14,7 @@ The full text was scraped and cleaned from UVA's Ovid Project using `BeautifulSo
 * `https://api.ovidasaservice.com`
 
 `text`
-* `v1/text?query={string}`  
+* `v1/text?query={str}`  
 Returns all lines matching your query sorted in their original order
 
 `chapter`
@@ -27,7 +27,7 @@ Returns all chapters with titles matching `str` value
 `v1/book/{int}?query={str}&chapter={int}`
 
 `random`
-* `v1/random/{resource}`
+* `v1/random/{resource}`  
 `resource` param can be one of the following values: `line`, `chapter`, or `book`
 
 ## Example  
