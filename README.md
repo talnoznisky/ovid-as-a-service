@@ -13,10 +13,10 @@ The full text was scraped and cleaned from UVA's Ovid Project using `BeautifulSo
 `Base URL`
 * `https://api.ovidasaservice.com`
 
-`lines (AKA full text search)`
-* `v1/lines?query={string}`  
+`text`
+* `v1/text?query={string}`  
 Returns all lines matching your query sorted in their original order
-* `v1/lines/random`  
+* `v1/text/random`  
 Returns a random line
 
 `chapter`
@@ -29,13 +29,18 @@ Returns a random chapter
 * `v1/book?query={int}`  
 Returns entirety of the book matching `int` value, sorted in its order order 
 * `v1/book/random`  
-Returns entirety of a random book
+Returns entirety of a random book  
+
+`Example`:  
+>`curl -X  GET 'https://api.ovidasaservice.com/v1/text?query=io'`  
+
+Returns:
+>`{"count":61,"results":[{"book":"1","chapter":"24","chapter_name":"Inachus mourns for Io","line":"247","text":"There is a grove in Haemonia, closed in on every side by wooded cliffs."}...],"credits":"This A.S. Kline translation of Ovid's The Metamorphoses was scraped from University of Virginia Library's Ovid Collection. See more: https://ovid.lib.virginia.edu/about.html. Labor ipse voluptas."}`
   
 ## Authors and acknowledgements
 * tal.noznisky@gmail.com
 * University of Virgina Library Ovid Project
 * A.L. Kline trans. of Ovid's The Metamorphoses  
-`Labor ipse voluptas`
 
 ## License
 
