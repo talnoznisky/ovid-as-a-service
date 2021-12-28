@@ -2,18 +2,22 @@ import requests
 import unicodedata
 import re
 import os 
-import json
 
 import spacy
+from spacy.language import Language
+
 from bs4 import BeautifulSoup
 
-from spacy.language import Language
+from whoosh import index
+from whoosh.fields import NUMERIC, Schema, TEXT
+from whoosh.index import create_in, open_dir
+from whoosh.query import *
+from whoosh.analysis import StandardAnalyzer
+
 
 base_url = 'https://ovid.lib.virginia.edu/trans'
 init_page = 'Metamorph.htm'
-output_file = 'processing/data/metamorphoses.json'
 
-# init spacy
 nlp = spacy.load('en_core_web_sm', disable=['ner', 'textcat'])
 
 
@@ -50,7 +54,7 @@ def get_all_books(soup):
     return links 
 
 
-def book_generator(book_counter, chapter_counter, line_counter, soup):
+def book_generator(line_counter, book_counter, chapter_counter, soup):
     elem = soup.find_all('h4')
     start = elem[0]
     book = []
@@ -90,32 +94,51 @@ def book_generator(book_counter, chapter_counter, line_counter, soup):
     return book
 
 
-def write_jsonl(data, output_path, append):
-    mode = 'a+' if append else 'w'
-    with open(output_path, mode, encoding='utf-8') as f:
-        for line in data:
-            json_record = json.dumps(line, ensure_ascii=False)
-            f.write(json_record + '\n')
+def write_to_index(data):
+    ix = index.open_dir("index")
+    writer = ix.writer()
+    try:
+        for doc in data:
+            writer.add_document(
+                line=str(doc['line']),
+                book=str(doc['book']),
+                chapter=str(doc['chapter']),
+                chapter_name=doc['chapter_name'],
+                text=doc['text']
+            )
+    except:
+        writer.cancel()
+    writer.commit() 
 
 
 if __name__ == '__main__':
+    schema = Schema(
+            line=NUMERIC(stored=True, sortable=True),
+            book=TEXT(stored=True, sortable=True, analyzer=StandardAnalyzer(stoplist=None)),
+            chapter=TEXT(stored=True, sortable=True, analyzer=StandardAnalyzer(stoplist=None)) ,
+            chapter_name=TEXT(stored=True, sortable=True, analyzer=StandardAnalyzer(stoplist=None)),
+            text=TEXT(stored=True, sortable=True, analyzer=StandardAnalyzer(stoplist=None))
+        )
+
+    if not os.path.exists('index'):
+        os.mkdir('index')
+    ix = create_in('index', schema)
+
     init_url = make_url(base_url, init_page)
     init_soup = make_soup(init_url)
-
     links = get_all_books(init_soup)
 
+    line_counter = 1
     book_counter = 1
     chapter_counter = 0
-    line_counter = 0
 
     for link in links:
-        append = True if book_counter > 1 else False
-        
         url = make_url(base_url, link)
         soup = make_soup(url)
 
-        book = book_generator(book_counter, chapter_counter, line_counter, soup)
-        write_jsonl(book, output_file, append)
+        book = book_generator(line_counter, book_counter, 
+                            chapter_counter, soup)
+        write_to_index(book)
 
         book_counter += 1
         line_counter += len(book)
