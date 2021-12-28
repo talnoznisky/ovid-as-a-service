@@ -16,32 +16,37 @@ The full text was scraped and cleaned from UVA's Ovid Project using `BeautifulSo
 `text`
 * `v1/text?query={string}`  
 Returns all lines matching your query sorted in their original order
-* `v1/text/random`  
-Returns a random line
 
 `chapter`
-* `v1/chapter?query={int}`  
-Returns all chapters matching `int` value
-* `v1/chapter/random`  
-Returns a random chapter
+* `v1/chapter?query={str}`  
+Returns all chapters with titles matching `str` value
 
 `book`
-* `v1/book?query={int}`  
-Returns entirety of the book matching `int` value, sorted in its order order 
-* `v1/book/random`  
-Returns entirety of a random book  
+* `v1/book/int`  
+* Note: `book` can also accept optional text and chapter query params to search for text and/or chapter number within a book
+`v1/book/{int}?query={str}&chapter={int}`
 
-`Example`:  
->`curl -X  GET 'https://api.ovidasaservice.com/v1/text?query=io'`  
+`random`
+* `v1/random/{resource}`
+`resource` param can be one of the following values: `line`, `chapter`, or `book`
+
+## Example  
+`book` endpoint:
+>`curl -X  GET 'https://api.ovidasaservice.com/v1/book/1?query=io&chapter=24'`  
 
 Returns:
->`{"count":61,"results":[{"book":"1","chapter":"24","chapter_name":"Inachus mourns for Io","line":"247","text":"There is a grove in Haemonia, closed in on every side by wooded cliffs."}...],"credits":"This A.S. Kline translation of Ovid's The Metamorphoses was scraped from University of Virginia Library's Ovid Collection. See more: https://ovid.lib.virginia.edu/about.html. Labor ipse voluptas."}`
-  
+>`{"count":9,"results":[{"book":"1","chapter":"24","chapter_name":"Inachus mourns for Io","line":"247","text":"There is a grove in Haemonia, closed in on every side by wooded cliffs."}...],"credits":"This A.S. Kline translation of Ovid's The Metamorphoses was scraped from University of Virginia Library's Ovid Collection. See more: https://ovid.lib.virginia.edu/about.html. Labor ipse voluptas."}`
+
+`random` endpoint:
+>`curl -X  GET 'https://api.ovidasaservice.com/v1/random/line'`
+
+Returns:
+>`{"count":1,"results":[{"book":"2","chapter":"33","chapter_name":"Aglauros is turned to stone","line":"763","text":"Nor was she white stone:"}],"credits":"This A.S. Kline translation of Ovid's The Metamorphoses was scraped from University of Virginia Library's Ovid Collection. See more: https://ovid.lib.virginia.edu/about.html. Labor ipse voluptas."}`
+
 ## Authors and acknowledgements
 * tal.noznisky@gmail.com
-* University of Virgina Library Ovid Project
+* University of Virginia Library Ovid Collection - thank you for the transcription!
 * A.L. Kline trans. of Ovid's The Metamorphoses  
 
 ## License
-
 This project is licensed under the MIT License - see the LICENSE.md file for details
