@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from .ovid_as_a_service.main import OvidAsAService
+from typing import Optional
 
 app = FastAPI()
 ovid = OvidAsAService()
@@ -15,31 +16,33 @@ app.add_middleware(
 )
 
 # text query endpoints
-@app.get("/v1/text")
+@app.get("/v1/full_text")
 def get_text(query: str):
     return JSONResponse(ovid.query_text(query))
 
-@app.get("/v1/text/random")
-def get_random_text():
-    return JSONResponse(ovid.query_random_line())
 
 # chapter query endpoints
 @app.get("/v1/chapter")
 def get_text(query: str):
     return JSONResponse(ovid.query_chapter(query))
 
-@app.get("v1/chapter/random")
-def get_random_chapter():
-    return JSONResponse(ovid.query_random_chapter())
 
 # book query endpoints
-@app.get("/v1/book")
-def get_book(query: int):
-    return JSONResponse(ovid.query_book(query))
+@app.get("/v1/book/{book_num}")
+def get_book(book_num: int, chapter: Optional[int] = None, query: Optional[str] = None):
+    return JSONResponse(ovid.query_book(book_num, chapter, query))
 
-@app.get("/v1/book/random")
-def get_book():
-    return JSONResponse(ovid.query_random_book())
+
+# random endpoints
+@app.get("/v1/random/{resource}")
+def get_random(resource: str):
+    if resource == 'book':
+        return JSONResponse(ovid.query_random_book())
+    elif resource == 'line':
+        return JSONResponse(ovid.query_random_line())
+    elif resource =='chapter':
+        return JSONResponse(ovid.query_random_chapter())
+
 
 # get credits
 @app.get("/v1/credits")
