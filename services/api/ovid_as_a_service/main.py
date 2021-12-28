@@ -1,35 +1,62 @@
-import logging
-import elasticsearch
-from elasticsearch_dsl import Search, Q, connections
+import random
+
+from whoosh.index import open_dir
+from whoosh.qparser.default import QueryParser
+from whoosh.query import Term
+from whoosh.qparser import MultifieldParser
 
 class OvidAsAService():
     def __init__(self):
-        self._init_es()
-
+        self.index = self._init_index()
+        self.credits = "This A.S. Kline translation of Ovid's The Metamorphoses was scraped from University of Virginia Library's Ovid Collection. See more: https://ovid.lib.virginia.edu/about.html. Labor ipse voluptas."
+    
     # INT FUNCTIONS
-    def _init_es(self):
-        _es = connections.create_connection(alias='default', hosts=['elasticsearch:9200'])
-        if _es.ping():
-            logging.info('connected to es!')
-        else:
-            logging.info('not connected to es!')
-        return _es
+    def _init_index(self):
+        return open_dir("index")
 
-    def _get_results(self, query, fields):
-        q = Q("multi_match", query=query, fields=fields)
-        res = Search(using='default').query(q)
-        len = res.count()
-        if len <= 0:
+    def _get_results(self, query, fields, filter=None):
+        query = str(query)
+        qp = MultifieldParser(fields, schema=self.index.schema)
+        q = qp.parse(query)
+        search  = self.index.searcher()
+        response = search.search(q, limit=None, filter=filter, sortedby='line')
+        results = [dict(hit) for hit in response]
+
+        if len(results) <= 0:
             return {'message': 'no results!'}
-        return [hit.to_dict() for hit in res[0:len].sort('line')]
+        
+        results_obj = {
+            'count': len(results),
+            'results': results, 
+            'credits': self.credits
+        }
+        return results_obj
 
     # EXT FUNCTIONS
     def query_text(self, query: str):
-        fields_to_search = ['chapter_name', 'text']
+        return self._get_results(query, ['chapter_name', 'text'])      
 
-        return self._get_results(query, fields_to_search)
+    def query_book(self, query: str):
+        return self._get_results(query, ['book'])
 
-    def query_book(self, query: int):
-        fields_to_search = ['book']
+    def query_chapter(self, query: str):
+        return self._get_results(query, ['chapter'])
 
-        return self._get_results(query, fields_to_search)
+    def query_random_book(self):
+        int = random.randint(1, 16)
+        return self._get_results(int, ['book']) 
+
+    def query_random_line(self):
+        int = random.randint(1, 5578)
+        return self._get_results(int, ['line'])
+
+    def query_random_chapter(self):
+        line = self.query_random_line()['results'][0]
+        book = line['book']
+        chapter = line['chapter']
+        filter_chap = Term("chapter", chapter)
+        
+        return self._get_results(book, ['book'], filter=filter_chap)
+
+    def return_credits(self):
+        return {'credits': self.credits}
