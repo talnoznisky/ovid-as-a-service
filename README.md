@@ -11,7 +11,8 @@ The full text was scraped and cleaned from UVA's Ovid Project using `BeautifulSo
 
 ## Endpoints
 `Base URL`
-* `https://api.ovidasaservice.com`
+* ~~`https://api.ovidasaservice.com`~~
+* `https://dev-api.ovidasaservice.com` (for now)
 
 `text`
 * `v1/text?query={str}`  
