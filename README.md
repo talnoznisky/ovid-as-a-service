@@ -11,11 +11,10 @@ The full text was scraped and cleaned from UVA's Ovid Project using `BeautifulSo
 
 ## Endpoints
 `Base URL`
-* ~~`https://api.ovidasaservice.com`~~
-* `https://dev-api.ovidasaservice.com` (for now)
+* `https://api.ovidasaservice.com`
 
-`text`
-* `v1/text?query={str}`  
+`full_text`
+* `v1/full_text?query={str}`  
 Returns all lines matching your query sorted in their original order
 
 `chapter`
