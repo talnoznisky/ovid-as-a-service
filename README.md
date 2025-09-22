@@ -50,3 +50,34 @@ Returns:
 
 ## License
 This project is licensed under the MIT License - see the LICENSE.md file for details
+
+
+## TODO:
+- **Repo basics**
+  - Set up Dependabot/Renovate (optional)
+
+- **Testing**
+  - Unit tests: param validation, routers, utils
+  - Contract tests: golden responses for legacy endpoints
+  - Integration tests: FastAPI `TestClient` hits all endpoints
+  - Schema tests: ensure OpenAPI has required routes/params
+  - Smoke/perf test: assert P95 latency below threshold locally
+
+- **Code quality**
+  - Formatting & linting: `ruff` (format + lint) and/or `black`
+  - Typing: `mypy` with Pydantic plugin
+  - Security scans: `bandit`, `pip-audit`
+  - Pre-commit hooks for all of the above
+
+- **CI/CD**
+  - Lint → typecheck → tests → Docker build → smoke test
+  - Auto-deploy on tag
+
+- **Docs**
+  - Confirm `/docs` (Swagger) builds cleanly
+  - Link checks in README
+  - Add example curl requests
+
+- **Observability**
+  - Add `/health` route
+  - Expose basic metrics (requests, latency, cache hit rate)
